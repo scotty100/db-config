@@ -1,0 +1,35 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: mongo
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+         app: mongo
+    spec:
+      containers:
+      - name: mongo
+        image: clutteredcode/mongo-alpine:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 27017
+        env:
+        - name: MONGO_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: mongo-secrets
+              key: username
+        - name: MONGO_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mongo-secrets
+              key: password
+        volumeMounts:
+        - name: mongodata
+          mountPath: /data/db
+      volumes:
+      - name: mongodata
+        persistentVolumeClaim:
+          claimName: mongo-data
