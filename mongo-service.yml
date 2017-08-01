@@ -5,8 +5,8 @@ metadata:
   labels:
     app: mongo
 spec:
+  selector:
+    app: mongo
   ports:
   - port: 27017
     targetPort: 27017
-  selector:
-    app: mongo
